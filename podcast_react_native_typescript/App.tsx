@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { Audio } from 'expo-av';
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
 import { useState, useEffect } from 'react';
 
 var mp3file = "https://d3ctxlq1ktw2nl.cloudfront.net/staging/2025-0-5/a7fbb627-e878-2eaf-efaa-caca68254d16.mp3"
@@ -13,6 +13,16 @@ export default function App() {
   useEffect(() => {
     async function loadSound() {
       try {
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          allowsRecordingIOS: false,
+          staysActiveInBackground: true,
+          interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+          interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+          shouldDuckAndroid: true,
+          playThroughEarpieceAndroid: false,
+        });
+
         const { sound } = await Audio.Sound.createAsync(
           { uri: mp3file },
           { shouldPlay: false }
